@@ -1,0 +1,17 @@
+{
+  "original": {
+    "model_size_mb": 14.2,
+    "avg_inference_time_ms": 89.69,
+    "fps": 11.1
+  },
+  "fp16": {
+    "model_size_mb": 7.1,
+    "avg_inference_time_ms": 51.78,
+    "fps": 19.3
+  },
+  "int8": {
+    "model_size_mb": 14.2,
+    "avg_inference_time_ms": 87.68,
+    "fps": 11.4
+  }
+}

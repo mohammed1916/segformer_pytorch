@@ -11,6 +11,10 @@ import torch.nn as nn
 import numpy as np
 from pathlib import Path
 import warnings
+import json
+import csv
+from datetime import datetime
+import hashlib
 warnings.filterwarnings("ignore")
 
 try:
@@ -27,15 +31,93 @@ except ImportError:
 
 
 class ModelOptimizer:
-    def __init__(self, config_path, checkpoint_path, device='cuda:0'):
+    def __init__(self, config_path, checkpoint_path, device='cuda:0', output_dir='optimized_models'):
         self.config_path = config_path
         self.checkpoint_path = checkpoint_path
+        self.checkpoint_filename = Path(checkpoint_path).name  # Store filename for logging
         self.device = device
+        self.output_dir = Path(output_dir)
+        self.benchmarks_dir = self.output_dir / "benchmarks"
         self.original_model = None
         self.optimized_models = {}
+        self.session_id = self._generate_session_id()
+
+        # Create directories
+        self.output_dir.mkdir(exist_ok=True)
+        self.benchmarks_dir.mkdir(exist_ok=True)
 
         # Load original model
         self._load_original_model()
+
+    def _generate_session_id(self):
+        """Generate unique session ID based on timestamp and config"""
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        config_hash = hashlib.md5(str(self.config_path).encode()).hexdigest()[:8]
+        return f"{timestamp}_{config_hash}"
+
+    def _get_model_filename(self, model_type, extension):
+        """Generate unique filename for model"""
+        return f"{model_type}_{self.session_id}.{extension}"
+
+    def _save_benchmark_results(self, results, filename):
+        """Save benchmark results to JSON and CSV"""
+        # Add checkpoint filename to results
+        if isinstance(results, dict):
+            results = dict(results)  # Create a copy
+            results['checkpoint_filename'] = self.checkpoint_filename
+
+        # Save JSON
+        json_path = self.benchmarks_dir / f"{filename}.json"
+        with open(json_path, 'w') as f:
+            json.dump(results, f, indent=2, default=str)
+
+        # Save CSV
+        csv_path = self.benchmarks_dir / f"{filename}.csv"
+        if isinstance(results, dict):
+            with open(csv_path, 'w', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=results.keys())
+                writer.writeheader()
+                writer.writerow(results)
+
+    def _log_optimization_summary(self, results):
+        """Log optimization summary to file"""
+        summary_path = self.benchmarks_dir / f"optimization_summary_{self.session_id}.txt"
+
+        with open(summary_path, 'w') as f:
+            f.write("="*80 + "\n")
+            f.write("MODEL OPTIMIZATION SUMMARY\n")
+            f.write("="*80 + "\n\n")
+            f.write(f"Session ID: {self.session_id}\n")
+            f.write(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            f.write(f"Config: {self.config_path}\n")
+            f.write(f"Checkpoint: {self.checkpoint_filename}\n")
+            f.write(f"Device: {self.device}\n\n")
+
+            f.write("PERFORMANCE COMPARISON:\n")
+            f.write("-"*80 + "\n")
+            f.write(f"{'Model':<15} {'Size (MB)':<10} {'Time (ms)':<12} {'FPS':<8} {'Speedup':<10}\n")
+            f.write("-"*80 + "\n")
+
+            if 'original' in results:
+                original_time = results['original']['avg_inference_time_ms']
+
+                for name, metrics in results.items():
+                    speedup = original_time / metrics['avg_inference_time_ms']
+                    f.write(f"{name:<15} {metrics['model_size_mb']:<10.1f} "
+                           f"{metrics['avg_inference_time_ms']:<12.2f} {metrics['fps']:<8.1f} "
+                           f"{speedup:<10.2f}x\n")
+
+            f.write("-"*80 + "\n\n")
+
+            f.write("GENERATED FILES:\n")
+            for name in self.optimized_models.keys():
+                if name in ['fp16', 'int8']:
+                    f.write(f"  - {self._get_model_filename(name, 'pth')}\n")
+                elif name == 'onnx':
+                    f.write(f"  - {self._get_model_filename('onnx', 'onnx')}\n")
+                    f.write(f"  - {self._get_model_filename('onnx_optimized', 'onnx')}\n")
+
+            f.write(f"\nBenchmark results saved to: {self.benchmarks_dir}\n")
 
     def _load_original_model(self):
         """Load the original model"""
@@ -114,6 +196,11 @@ class ModelOptimizer:
             if isinstance(module, (nn.Conv2d, nn.Linear)):
                 module.register_forward_hook(fp16_forward_hook)
 
+        # Save FP16 model
+        fp16_path = self.output_dir / self._get_model_filename('fp16', 'pth')
+        torch.save(model_fp16.state_dict(), fp16_path)
+        print(f"FP16 model saved to: {fp16_path}")
+
         self.optimized_models['fp16'] = model_fp16
         print("FP16 optimization completed")
         return model_fp16
@@ -130,17 +217,24 @@ class ModelOptimizer:
             dtype=torch.qint8
         )
 
+        # Save INT8 model
+        int8_path = self.output_dir / self._get_model_filename('int8', 'pth')
+        torch.save(model_int8.state_dict(), int8_path)
+        print(f"INT8 model saved to: {int8_path}")
+
         self.optimized_models['int8'] = model_int8
         print("INT8 quantization completed")
         return model_int8
 
-    def convert_to_onnx(self, output_path, input_shape=(1, 3, 1024, 1024)):
+    def convert_to_onnx(self, input_shape=(1, 3, 1024, 1024)):
         """Convert model to ONNX format"""
         if not ONNX_AVAILABLE:
             print("ONNX Runtime not available. Install with: pip install onnxruntime")
             return None
 
-        print(f"Converting model to ONNX format: {output_path}")
+        onnx_filename = self._get_model_filename('onnx', 'onnx')
+        onnx_path = self.output_dir / onnx_filename
+        print(f"Converting model to ONNX format: {onnx_path}")
         assert self.original_model is not None, "Model not loaded"
 
         # Create a fresh copy of the original model for ONNX export
@@ -155,7 +249,7 @@ class ModelOptimizer:
         torch.onnx.export(
             onnx_model,  # type: ignore
             (dummy_input,),
-            output_path,
+            onnx_path,
             export_params=True,
             opset_version=13,  # Updated from 11 to 13 for unflatten support
             do_constant_folding=True,
@@ -164,10 +258,10 @@ class ModelOptimizer:
             dynamic_axes={'input': {0: 'batch_size'}, 'output': {0: 'batch_size'}}
         )
 
-        print(f"ONNX model saved to: {output_path}")
-        return output_path
+        print(f"ONNX model saved to: {onnx_path}")
+        return onnx_path
 
-    def optimize_onnx_model(self, onnx_path, optimized_path):
+    def optimize_onnx_model(self, onnx_path):
         """Optimize ONNX model using ONNX Runtime"""
         if not ONNX_AVAILABLE:
             print("ONNX Runtime not available")
@@ -175,6 +269,9 @@ class ModelOptimizer:
 
         assert ONNX_AVAILABLE, "ONNX Runtime not available"
         import onnxruntime as ort  # type: ignore
+
+        optimized_filename = self._get_model_filename('onnx_optimized', 'onnx')
+        optimized_path = self.output_dir / optimized_filename
 
         print("Optimizing ONNX model...")
 
@@ -280,6 +377,16 @@ class ModelOptimizer:
                 print(f"\nBenchmarking {name} optimized model...")
                 results[name] = self.benchmark_model(model, input_shape, num_runs)
 
+        # Save individual benchmark results
+        for name, metrics in results.items():
+            self._save_benchmark_results(metrics, f"benchmark_{name}_{self.session_id}")
+
+        # Save comparison results
+        self._save_benchmark_results(results, f"comparison_{self.session_id}")
+
+        # Log optimization summary
+        self._log_optimization_summary(results)
+
         # Print comparison table
         print("\n" + "-"*80)
         print(f"{'Model':<15} {'Size (MB)':<10} {'Time (ms)':<12} {'FPS':<8} {'Speedup':<10}")
@@ -335,23 +442,26 @@ def main():
         optimizer.optimize_batch_processing()
 
     if 'onnx' in args.optimize or 'all' in args.optimize:
-        onnx_path = output_dir / "model.onnx"
-        optimizer.convert_to_onnx(onnx_path, input_shape)
+        onnx_path = optimizer.convert_to_onnx(input_shape)
 
-        # Optimize ONNX model
-        optimized_onnx_path = output_dir / "model_optimized.onnx"
-        optimizer.optimize_onnx_model(onnx_path, optimized_onnx_path)
+        if onnx_path:
+            # Optimize ONNX model
+            optimizer.optimize_onnx_model(onnx_path)
 
     if 'tensorrt' in args.optimize or 'all' in args.optimize:
-        onnx_path = output_dir / "model.onnx"
+        onnx_filename = optimizer._get_model_filename('onnx', 'onnx')
+        onnx_path = optimizer.output_dir / onnx_filename
         if onnx_path.exists():
-            engine_path = output_dir / "model.engine"
+            engine_filename = optimizer._get_model_filename('tensorrt', 'engine')
+            engine_path = optimizer.output_dir / engine_filename
             optimizer.create_tensorrt_engine(onnx_path, engine_path, input_shape)
 
     # Compare all models
     optimizer.compare_optimizations(input_shape, args.num_runs)
 
-    print(f"\nOptimized models saved to: {output_dir}")
+    print(f"\nOptimized models saved to: {optimizer.output_dir}")
+    print(f"Benchmark results saved to: {optimizer.benchmarks_dir}")
+    print(f"Session ID: {optimizer.session_id}")
     print("\nOptimization complete! 🚀")
 
 

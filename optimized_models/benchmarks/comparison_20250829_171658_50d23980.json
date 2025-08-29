@@ -1,0 +1,23 @@
+{
+  "original": {
+    "avg_inference_time_ms": 89.26405906677246,
+    "fps": 11.202717089662784,
+    "model_size_mb": 14.200695037841797
+  },
+  "fp16": {
+    "avg_inference_time_ms": 48.43783378601074,
+    "fps": 20.645019024133333,
+    "model_size_mb": 7.100366592407227
+  },
+  "int8": {
+    "avg_inference_time_ms": 85.11486053466797,
+    "fps": 11.74882968400908,
+    "model_size_mb": 14.200695037841797
+  },
+  "batch": {
+    "avg_inference_time_ms": 79.7579288482666,
+    "fps": 12.537938414905733,
+    "model_size_mb": 14.200695037841797,
+    "batch_size": 4
+  }
+}

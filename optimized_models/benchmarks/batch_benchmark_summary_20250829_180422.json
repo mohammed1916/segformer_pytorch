@@ -1,0 +1,67 @@
+{
+  "segformer.b0.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 89.81623649597168,
+    "fps": 11.133844380629895,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b0.512x1024.city.160k.pth": {
+    "avg_inference_time_ms": 88.96045684814453,
+    "fps": 11.24094946709862,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b0.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 89.07470703125,
+    "fps": 11.226531451281348,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b1.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 118.97945404052734,
+    "fps": 8.404812478458467,
+    "model_size_mb": 52.2069206237793
+  },
+  "segformer.b2.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 184.88640785217285,
+    "fps": 5.408726426225754,
+    "model_size_mb": 94.3397331237793
+  },
+  "segformer.b2.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 180.75547218322754,
+    "fps": 5.532335967047922,
+    "model_size_mb": 94.3397331237793
+  },
+  "segformer.b3.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 253.8578987121582,
+    "fps": 3.939211681311007,
+    "model_size_mb": 170.1600456237793
+  },
+  "segformer.b3.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 254.9427032470703,
+    "fps": 3.922449975086673,
+    "model_size_mb": 170.1600456237793
+  },
+  "segformer.b4.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 320.1709270477295,
+    "fps": 3.123331681676784,
+    "model_size_mb": 234.1346549987793
+  },
+  "segformer.b4.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 314.94994163513184,
+    "fps": 3.1751077482608197,
+    "model_size_mb": 234.1346549987793
+  },
+  "segformer.b5.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 360.8248710632324,
+    "fps": 2.771427582176717,
+    "model_size_mb": 312.7186393737793
+  },
+  "segformer.b5.640x640.ade.160k.pth": {
+    "avg_inference_time_ms": 359.60545539855957,
+    "fps": 2.780825443517467,
+    "model_size_mb": 312.7186393737793
+  },
+  "segformer_mit-b1_cityscapes.pth": {
+    "avg_inference_time_ms": 86.9408130645752,
+    "fps": 11.50207784757259,
+    "model_size_mb": 14.200695037841797
+  }
+}

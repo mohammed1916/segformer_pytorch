@@ -1,0 +1,2 @@
+avg_inference_time_ms,fps,model_size_mb,batch_size
+79.7579288482666,12.537938414905733,14.200695037841797,4

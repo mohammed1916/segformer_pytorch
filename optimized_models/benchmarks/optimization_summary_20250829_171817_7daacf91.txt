@@ -1,0 +1,9 @@
+MODEL OPTIMIZATION SUMMARY
+==================================================
+Session ID: 20250829_171817_7daacf91
+Timestamp: 2025-08-29 17:18:17
+
+PERFORMANCE RESULTS:
+original: 11.1 FPS, 14.2 MB
+fp16: 19.3 FPS, 7.1 MB
+int8: 11.4 FPS, 14.2 MB

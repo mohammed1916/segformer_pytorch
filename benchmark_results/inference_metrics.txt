@@ -1,0 +1,20 @@
+MMSegmentation Inference Benchmark Results
+==================================================
+Input: demo/demo.png
+Config: local_configs/segformer/segformer_mit-b0_8xb1-160k_cityscapes-1024x1024.py
+Device: cuda:0
+Type: Image
+
+total_frames: 5
+total_time_seconds: 1.449371576309204
+avg_inference_time_ms: 289.8743152618408
+min_inference_time_ms: 283.0362319946289
+max_inference_time_ms: 298.94518852233887
+std_inference_time_ms: 5.590944117248051
+fps: 3.449770977800186
+avg_memory_usage_mb: 1190.890625
+max_memory_usage_mb: 1199.32421875
+memory_usage_std_mb: 6.787786668094578
+avg_gpu_memory_usage_mb: 1517.8
+max_gpu_memory_usage_mb: 1569.0
+gpu_memory_usage_std_mb: 102.39999999999999

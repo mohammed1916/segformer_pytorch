@@ -1,0 +1,18 @@
+# Model Optimization Dependencies
+# Install these for full optimization capabilities
+
+# ONNX Runtime for model optimization and inference
+onnxruntime>=1.15.0
+onnxruntime-gpu>=1.15.0  # For GPU acceleration
+
+# ONNX for model conversion
+onnx>=1.14.0
+
+# Optional: TensorRT for maximum performance (NVIDIA GPUs only)
+# tensorrt>=8.6.0  # Install via NVIDIA's package manager
+
+# PyTorch quantization tools (usually included with PyTorch)
+torch>=2.0.0
+
+# MMCV optimizations
+mmcv>=2.0.0

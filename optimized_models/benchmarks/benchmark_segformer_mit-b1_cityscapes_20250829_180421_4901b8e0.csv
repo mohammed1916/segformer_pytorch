@@ -1,2 +1,0 @@
-avg_inference_time_ms,fps,model_size_mb,checkpoint_filename
-86.9408130645752,11.50207784757259,14.200695037841797,segformer_mit-b1_cityscapes.pth

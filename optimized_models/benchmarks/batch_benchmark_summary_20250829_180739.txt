@@ -1,0 +1,26 @@
+================================================================================
+BATCH BENCHMARK SUMMARY
+================================================================================
+
+Timestamp: 2025-08-29 18:07:39
+Total models benchmarked: 13
+
+PERFORMANCE COMPARISON:
+--------------------------------------------------------------------------------
+Model                                    Size (MB)  Time (ms)    FPS     
+--------------------------------------------------------------------------------
+segformer.b0.1024x1024.city.160k.pth     14.2       83.63        12.0    
+segformer.b0.512x1024.city.160k.pth      14.2       89.61        11.2    
+segformer.b0.512x512.ade.160k.pth        14.2       87.87        11.4    
+segformer.b1.512x512.ade.160k.pth        52.2       115.26       8.7     
+segformer.b2.1024x1024.city.160k.pth     94.3       185.75       5.4     
+segformer.b2.512x512.ade.160k.pth        94.3       173.91       5.8     
+segformer.b3.1024x1024.city.160k.pth     170.2      241.43       4.1     
+segformer.b3.512x512.ade.160k.pth        170.2      246.79       4.1     
+segformer.b4.1024x1024.city.160k.pth     234.1      307.27       3.3     
+segformer.b4.512x512.ade.160k.pth        234.1      315.72       3.2     
+segformer.b5.1024x1024.city.160k.pth     312.7      342.38       2.9     
+segformer.b5.640x640.ade.160k.pth        312.7      352.52       2.8     
+--------------------------------------------------------------------------------
+
+Detailed results saved to: optimized_models\benchmarks

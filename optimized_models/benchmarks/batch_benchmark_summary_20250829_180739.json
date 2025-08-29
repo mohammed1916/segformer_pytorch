@@ -1,0 +1,62 @@
+{
+  "segformer.b0.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 83.6308479309082,
+    "fps": 11.957310307628974,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b0.512x1024.city.160k.pth": {
+    "avg_inference_time_ms": 89.6113395690918,
+    "fps": 11.159301990223947,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b0.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 87.8683090209961,
+    "fps": 11.3806674003599,
+    "model_size_mb": 14.200695037841797
+  },
+  "segformer.b1.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 115.26408195495605,
+    "fps": 8.675729533774355,
+    "model_size_mb": 52.2069206237793
+  },
+  "segformer.b2.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 185.7492446899414,
+    "fps": 5.383601971944661,
+    "model_size_mb": 94.3397331237793
+  },
+  "segformer.b2.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 173.90942573547363,
+    "fps": 5.750119614109118,
+    "model_size_mb": 94.3397331237793
+  },
+  "segformer.b3.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 241.4339542388916,
+    "fps": 4.141919487474119,
+    "model_size_mb": 170.1600456237793
+  },
+  "segformer.b3.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 246.78921699523926,
+    "fps": 4.052040896176152,
+    "model_size_mb": 170.1600456237793
+  },
+  "segformer.b4.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 307.27081298828125,
+    "fps": 3.254458144835703,
+    "model_size_mb": 234.1346549987793
+  },
+  "segformer.b4.512x512.ade.160k.pth": {
+    "avg_inference_time_ms": 315.7151222229004,
+    "fps": 3.1674124221835105,
+    "model_size_mb": 234.1346549987793
+  },
+  "segformer.b5.1024x1024.city.160k.pth": {
+    "avg_inference_time_ms": 342.3759460449219,
+    "fps": 2.920765934499364,
+    "model_size_mb": 312.7186393737793
+  },
+  "segformer.b5.640x640.ade.160k.pth": {
+    "avg_inference_time_ms": 352.52466201782227,
+    "fps": 2.836680969428017,
+    "model_size_mb": 312.7186393737793
+  }
+}

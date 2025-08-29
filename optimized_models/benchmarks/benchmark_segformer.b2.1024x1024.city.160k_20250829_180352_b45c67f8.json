@@ -1,6 +1,0 @@
-{
-  "avg_inference_time_ms": 184.88640785217285,
-  "fps": 5.408726426225754,
-  "model_size_mb": 94.3397331237793,
-  "checkpoint_filename": "segformer.b2.1024x1024.city.160k.pth"
-}

@@ -7,7 +7,8 @@ import time
 import mmcv
 import torch
 from mmcv.runner import init_dist
-from mmcv.utils import Config, DictAction, get_git_hash
+from mmengine.config import Config, DictAction
+from mmengine.utils import get_git_hash
 from IPython import embed
 from collections import OrderedDict
 

@@ -1,6 +1,6 @@
 import argparse
 
-from mmcv import Config, DictAction
+from mmengine.config import Config, DictAction
 
 
 def parse_args():

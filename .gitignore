@@ -115,7 +115,9 @@ work_dirs/
 work_dirs
 pretrained
 pretrained/
+dataset
 # Pytorch
 *.pth
 trash/
 trash
+
